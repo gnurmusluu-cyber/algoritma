@@ -1,101 +1,117 @@
 import streamlit as st
 
 # Sayfa Ayarları
-st.set_page_config(page_title="Algorit-Mat Pro", layout="wide")
+st.set_page_config(page_title="Algorit-Mat Akademi", layout="wide")
 
-# SİBER-BUZ TEMASI (Görsel Standartlar)
+# EDU-MODERN TASARIM (Aydınlık ve Ferah)
 st.markdown("""
     <style>
-    .stApp { background: #050a12; color: #00f2ff; }
-    .math-card { 
-        background: rgba(0, 242, 255, 0.1); 
-        padding: 20px; border-radius: 15px; 
-        border: 1px solid #00f2ff; margin-bottom: 20px;
+    /* Ana Arka Plan */
+    .stApp { background: #f8fafc; color: #1e293b; }
+    
+    /* Bölüm Kartları */
+    .section-card { 
+        background: #ffffff; 
+        padding: 25px; border-radius: 12px; 
+        border: 1px solid #e2e8f0; 
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
     }
-    .code-box { 
-        background: #000; border: 1px solid #00f2ff; 
-        padding: 15px; border-radius: 10px; font-family: 'Courier New', monospace;
-        color: #00ffcc;
+    
+    /* Matematik Kural Alanı */
+    .math-header { background: #eff6ff; border-left: 6px solid #3b82f6; padding: 15px; border-radius: 8px; }
+    
+    /* Blok Butonları */
+    .stButton>button {
+        background: #ffffff; color: #3b82f6; border: 2px solid #3b82f6;
+        border-radius: 8px; width: 100%; font-weight: 600;
     }
-    .step-card {
-        background: rgba(255, 255, 255, 0.05);
-        padding: 10px; border-radius: 8px;
-        border-left: 4px solid #00f2ff; margin-bottom: 5px;
+    .stButton>button:hover { background: #3b82f6; color: #ffffff; }
+    
+    /* Kod Kutusu (Siyah Konsol) */
+    .code-output { 
+        background: #1e293b; color: #38bdf8; 
+        padding: 15px; border-radius: 8px; 
+        font-family: 'Consolas', monospace; font-size: 0.9rem;
     }
     </style>
     """, unsafe_allow_html=True)
 
-# Hafıza Yönetimi (Session State)
+# Hafıza Yönetimi
 if 'steps' not in st.session_state:
     st.session_state.steps = []
 
-# Başlık ve Matematiksel Kural [cite: 168]
-st.title("🧪 Algorit-Mat: Blok Tabanlı Mantık Atölyesi")
-st.markdown('<div class="math-card">', unsafe_allow_html=True)
-st.subheader("📐 Üçgen Eşitsizliği Teoremi")
+# ÜST BAŞLIK
+st.title("🎓 Algorit-Mat Öğrenme Laboratuvarı")
+st.markdown("---")
+
+# 1. BÖLÜM: MATEMATİKSEL KURAL
+st.markdown('<div class="section-card">', unsafe_allow_html=True)
+st.markdown('<div class="math-header"><h3>📐 Üçgen Eşitsizliği Kuralları</h3></div>', unsafe_allow_html=True)
+st.write("Bir üçgenin çizilebilmesi için her bir kenar, diğer iki kenarın farkından büyük, toplamından küçük olmalıdır:")
 st.latex(r"|a - b| < c < a + b") #
-st.write("Hedef: Kenarların bu kurala uygunluğunu denetleyen algoritmayı kur!")
 st.markdown('</div>', unsafe_allow_html=True)
 
-# Blok Tanımları [cite: 177]
+# Blok Tanımları
 available_blocks = {
-    "📥 Veri Al": "a, b, c = inputs()",
-    "🧮 Hesapla": "fark = abs(a-b); toplam = a+b",
-    "🔍 Kontrol Et": "if fark < c < toplam:",
-    "📤 Çıktı Ver": "print('Üçgen Çizilebilir')"
+    "📥 Verileri Tanımla": "a, b, c = kenar_input()",
+    "🧮 Fark ve Toplam": "fark = abs(a-b)\ntoplam = a+b",
+    "🔍 Kuralı Denetle": "if fark < c < toplam:",
+    "📤 Sonucu Yazdır": "print('Geometrik olarak mümkün!')"
 }
 
-col_left, col_right = st.columns([1, 1.2])
+# 2. BÖLÜM: ÇALIŞMA ALANI
+col_left, col_right = st.columns([1, 1.3])
 
 with col_left:
-    st.subheader("🧩 Bloklar")
-    # Her butona tıklandığında listeye ekle ve sayfayı yenile
-    for block_name in available_blocks.keys():
-        if st.button(f"➕ {block_name}", key=f"btn_{block_name}"):
-            if block_name not in st.session_state.steps:
-                st.session_state.steps.append(block_name)
-                st.rerun() # Sayfayı anında yenileyerek hatayı engeller
+    st.subheader("🧩 Algoritma Blokları")
+    st.caption("Adımları sırasıyla seçerek yapını kur:")
+    for b_name in available_blocks.keys():
+        if st.button(f"{b_name}", key=f"b_{b_name}"):
+            if b_name not in st.session_state.steps:
+                st.session_state.steps.append(b_name)
+                st.rerun()
 
-    if st.button("🗑️ Algoritmayı Sıfırla"):
+    if st.button("🔄 Labı Temizle", type="secondary"):
         st.session_state.steps = []
         st.rerun()
 
 with col_right:
-    st.subheader("🏗️ Senin Algoritman")
-    # Liste boşsa uyarı ver, doluysa blokları göster
+    st.subheader("🏗️ Mantık Akış Şeması")
+    st.markdown('<div class="section-card">', unsafe_allow_html=True)
     if not st.session_state.steps:
-        st.info("Sol taraftaki bloklara tıklayarak algoritmanı inşa etmeye başla!")
+        st.warning("Henüz bir blok eklemedin. Sol taraftaki menüden ilk adımı seç!")
     else:
         for i, step in enumerate(st.session_state.steps):
-            st.markdown(f'<div class="step-card"><b>Adım {i+1}:</b> {step}</div>', unsafe_allow_html=True)
+            st.info(f"**{i+1}. Adım:** {step}")
             if i < len(st.session_state.steps) - 1:
-                st.markdown("  ↓  ")
+                st.markdown("<center>⬇️</center>", unsafe_allow_html=True)
         
-        # PYTHON KODUNU ANLIK GÖRÜNTÜLEME [cite: 178]
         st.markdown("### 🐍 Python Kod Karşılığı")
-        st.markdown('<div class="code-box">', unsafe_allow_html=True)
+        st.markdown('<div class="code-output">', unsafe_allow_html=True)
         for step in st.session_state.steps:
             st.text(available_blocks[step])
         st.markdown('</div>', unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True)
 
-# TEST VE ÇALIŞTIRMA [cite: 175, 176]
+# 3. BÖLÜM: SİMÜLASYON TESTİ
 if len(st.session_state.steps) == 4:
-    st.markdown("---")
-    st.success("🎯 Algoritma tamamlandı! Şimdi test edebilirsin.")
+    st.markdown('<div class="section-card">', unsafe_allow_html=True)
+    st.subheader("🚀 Algoritmanı Dene")
     
-    c1, c2, c3 = st.columns(3)
-    val_a = c1.number_input("Kenar A", value=10)
-    val_b = c2.number_input("Kenar B", value=12)
-    val_c = c3.number_input("Kenar C", value=5)
+    t1, t2, t3 = st.columns(3)
+    a_val = t1.number_input("Kenar A", min_value=1, value=6)
+    b_val = t2.number_input("Kenar B", min_value=1, value=8)
+    c_val = t3.number_input("Kenar C", min_value=1, value=10)
     
-    if st.button("🚀 Algoritmayı Çalıştır"):
-        # Doğru Sıralama Kontrolü [cite: 22]
-        correct_order = ["📥 Veri Al", "🧮 Hesapla", "🔍 Kontrol Et", "📤 Çıktı Ver"]
+    if st.button("Laboratuvarı Çalıştır"):
+        correct_order = ["📥 Verileri Tanımla", "🧮 Fark ve Toplam", "🔍 Kuralı Denetle", "📤 Sonucu Yazdır"]
         if st.session_state.steps == correct_order:
-            if abs(val_a - val_b) < val_c < (val_a + val_b):
+            if abs(a_val - b_val) < c_val < (a_val + b_val):
                 st.balloons()
-                st.success("✅ Algoritma Doğru: Bu bir üçgendir!")
+                st.success("✅ Algoritma Onaylandı: Bu bir üçgendir!")
             else:
-                st.error("❌ Algoritma Doğru: Bu bir üçgen değildir!")
+                st.error("❌ Algoritma Doğru Çalıştı: Bu değerler kuralı ihlal ediyor.")
         else:
-            st.warning("⚠️ Sıralama Hatası: Algoritma basamakların mantıklı değil. Önce veriyi almalı, sonra hesaplamalısın!")
+            st.warning("⚠️ Mantık Hatası: Blokların sırası pedagojik olarak hatalı!")
+    st.markdown('</div>', unsafe_allow_html=True)
