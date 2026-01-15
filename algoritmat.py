@@ -1,55 +1,83 @@
 import streamlit as st
 import time
 
-# Sayfa Yapılandırması ve "Siber-Buz" Teması
-st.set_page_config(page_title="Algorit-Mat Prototip", page_icon="📐", layout="wide")
+# Sayfa yapılandırması
+st.set_page_config(page_title="Algorit-Mat | YetGen 2025", page_icon="📐", layout="wide")
 
-# CSS ile Görsel Standartlar
+# Görsel Standartlar (Siber-Buz Teması)
 st.markdown("""
     <style>
-    .main { background-color: #0e1117; color: #00d4ff; }
-    .stButton>button { background-color: #00d4ff; color: #000; border-radius: 10px; font-weight: bold; }
-    .stSuccess { background-color: #1e3a2f; color: #00ff00; }
+    .stApp { background-color: #060d14; color: #00f2ff; }
+    .stButton>button { 
+        background-color: #00f2ff; color: #000; 
+        border: 2px solid #00f2ff; border-radius: 8px;
+        width: 100%; font-weight: bold;
+    }
+    .stTextInput>div>div>input { background-color: #0c1a26; color: white; border: 1px solid #00f2ff; }
+    .stSuccess { background-color: #0a2e2a; color: #00ffcc; border: 1px solid #00ffcc; }
+    .stError { background-color: #2e0a0a; color: #ff4b4b; border: 1px solid #ff4b4b; }
     </style>
-    """, unsafe_allow_status=True)
+    """, unsafe_allow_html=True)
 
-# Yan Menü - Navigasyon
+# Yan Menü (Navigasyon) [cite: 163]
 with st.sidebar:
     st.title("🚀 Algorit-Mat")
-    page = st.radio("Menü", ["🏠 Ana Sayfa", "📐 Üçgen Modülü", "📊 Geri Bildirimler", "🏆 Liderlik Tablosu"])
-    st.info("Nitelikli Eğitim İçin Matematik & Kodlama [cite: 22]")
+    st.markdown("---")
+    choice = st.radio("Menü Seçimi:", ["Ana Sayfa", "Problem Çözücü", "Geri Bildirimler", "Takımımız"])
+    st.markdown("---")
+    st.info("Nitelikli Eğitim Hedefi: Somut Matematik & Algoritma")
 
-if page == "🏠 Ana Sayfa":
-    st.header("Algorit-Mat'a Hoş Geldin Genç Yazılımcı!")
-    st.write("Matematiği sadece çözme, onu algoritmalarla inşa et! [cite: 168]")
-    st.image("https://img.freepik.com/free-vector/coding-concept-illustration_114360-1209.jpg", width=500)
+# 1. Sayfa: Ana Sayfa (Değer Teklifi) [cite: 168]
+if choice == "Ana Sayfa":
+    st.header("Matematiği Kodla, Geleceği İnşa Et!")
+    st.write("Algorit-Mat, soyut matematiksel kavramları algoritmalara dönüştürerek öğrenmeyi kalıcı hale getirir.")
+    st.subheader("Neden Biz? [cite: 189]")
+    col1, col2 = st.columns(2)
+    with col1:
+        st.write("✅ **Soyut Kavramları Somutlaştırır:** Formülleri çalışan kodlara dönüştürür.")
+    with col2:
+        st.write("✅ **Bilişimsel Düşünme:** Matematik problemleri üzerinden algoritma mantığını öğretir.")
 
-elif page == "📐 Üçgen Modülü":
-    st.header("Üçgen Eşitsizliği Laboratuvarı")
-    st.write("Kural: Bir üçgen oluşturmak için kenarlar şu şartı sağlamalıdır: $|a - b| < c < a + b$")
-    
-    col1, col2, col3 = st.columns(3)
-    with col1: a = st.number_input("Kenar a", min_value=1, value=5)
-    with col2: b = st.number_input("Kenar b", min_value=1, value=5)
-    with col3: c = st.number_input("Kenar c", min_value=1, value=5)
+# 2. Sayfa: Problem Çözücü (Kritik Özellikler) [cite: 175, 176]
+elif choice == "Problem Çözücü":
+    st.header("📐 Kritik Özellik: Üçgen Eşitsizliği Denetleyici")
+    st.write("Matematiksel Kural: Bir kenar uzunluğu, diğer iki kenarın farkından büyük, toplamından küçük olmalıdır.")
+    st.latex(r"|a - b| < c < a + b") # LaTeX kullanımı
 
-    if st.button("Algoritmayı Test Et"):
-        with st.spinner("Mantık kontrol ediliyor..."):
+    st.markdown("### Algoritma Girdileri")
+    c1, c2, c3 = st.columns(3)
+    with c1: a = st.number_input("Kenar a:", min_value=1, value=5)
+    with c2: b = st.number_input("Kenar b:", min_value=1, value=5)
+    with c3: c = st.number_input("Kenar c:", min_value=1, value=5)
+
+    if st.button("Algoritmayı Çalıştır"):
+        with st.spinner("Mantıksal denetim yapılıyor..."):
             time.sleep(1)
-            # Kritik Özellik: Mantıksal Kontrol [cite: 176]
-            if (abs(a - b) < c < (a + b)) and (abs(a - c) < b < (a + c)) and (abs(b - c) < a < (b + a)):
-                st.success(f"✅ Başarılı! {a}, {b}, {c} değerleri ile bir üçgen çizilebilir.")
-                st.code(f"IF (abs({a}-{b}) < {c} < ({a}+{b})): PRINT 'Üçgen'")
+            # Algoritma Mantığı
+            is_valid = (abs(a - b) < c < (a + b)) and (abs(a - c) < b < (a + c)) and (abs(b - c) < a < (b + a))
+            
+            if is_valid:
+                st.success(f"🎨 Başarılı! {a}, {b} ve {c} değerleri ile bir üçgen çizilebilir.")
+                st.code(f"if abs({a}-{b}) < {c} < ({a}+{b}):\n    print('Üçgen Çizilebilir')", language='python')
             else:
-                st.error("❌ Hata! Matematiksel kurallara göre bu bir üçgen oluşturamaz.")
-                st.warning("İpucu: Bir kenar uzunluğu, diğer ikisinin farkından büyük olmalıdır.")
+                st.error("⚠️ Hata! Matematiksel kurallara göre bu bir üçgen oluşturamaz.")
+                st.write("Algoritma çıktısı: Koşul sağlanamadı.")
 
-elif page == "📊 Geri Bildirimler":
-    st.header("Süreç Geri Bildirimleri [cite: 184]")
-    st.write("Müşteri görüşmelerinden elde edilen veriler[cite: 185]:")
-    st.bar_chart({"Olumlu": 85, "Geliştirilmeli": 15})
-    st.blockquote("'Matematiği kodlayarak öğrenmek çok daha kalıcıymış!' - Öğrenci [cite: 186]")
+# 3. Sayfa: Geri Bildirimler (Sayısal Veriler) 
+elif choice == "Geri Bildirimler":
+    st.header("📊 Saha Doğrulaması")
+    st.write("Müşteri görüşmeleri sonrası elde edilen veriler:")
+    data = {"Kategori": ["Öğretmen Onayı", "Öğrenci İlgisi", "Uygulanabilirlik"], "Skor (%)": [92, 88, 95]}
+    st.table(data)
+    st.markdown("> 'İlk defa bir formülün neden var olduğunu anladım.' - *Persona Alıntısı* [cite: 186]")
 
-elif page == "🏆 Liderlik Tablosu":
-    st.header("Topluluk Sıralaması")
-    st.table({"Öğrenci": ["Mert", "Ayşe", "Can"], "Puan": [1250, 1100, 950]})
+# 4. Sayfa: Takımımız [cite: 187]
+elif choice == "Takımımız":
+    st.header("Ekip ve Roller [cite: 188]")
+    col_a, col_b = st.columns(2)
+    with col_a:
+        st.subheader("Bilişim Teknolojileri Öğretmeni")
+        st.write("Girişim fikrinin teknolojik altyapısı ve algoritma kurgusundan sorumlu.")
+    with col_b:
+        st.subheader("İlköğretim Matematik Öğretmeni")
+        st.write("Müfredat uyumu, pedagojik içerik ve problem setlerinin tasarımı.")
